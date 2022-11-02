@@ -1,4 +1,3 @@
-import 'package:firebase/screens/google_sign_in.dart';
 import 'package:firebase/screens/wrapper.dart';
 import 'package:firebase/services/auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,31 +19,28 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) =>Google_sign_in_Provider(),
-      child: StreamProvider<FirebaseUser?>.value(
-        value: AuthService().user,
-        initialData: null,
-        child: MaterialApp(
-          theme: ThemeData(
-            brightness: Brightness.light,
-            primaryColor: Colors.black,
-            buttonTheme: ButtonThemeData(
-              buttonColor: Colors.black,
-              textTheme: ButtonTextTheme.primary,
-              colorScheme:
-              Theme.of(context).colorScheme.copyWith(secondary: Colors.white),
-            ),
-            fontFamily: 'Georgia',
-            textTheme: const TextTheme(
-              headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-              headline6: TextStyle(fontSize: 20.0, fontStyle: FontStyle.italic),
-              bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
-            ),
+    return StreamProvider<FirebaseUser?>.value(
+      value: AuthService().user,
+      initialData: null,
+      child: MaterialApp(
+        theme: ThemeData(
+          brightness: Brightness.light,
+          primaryColor: Colors.black,
+          buttonTheme: ButtonThemeData(
+            buttonColor: Colors.black,
+            textTheme: ButtonTextTheme.primary,
+            colorScheme:
+            Theme.of(context).colorScheme.copyWith(secondary: Colors.white),
           ),
-          home: Wrapper(),
-        ),),
-    );
+          fontFamily: 'Georgia',
+          textTheme: const TextTheme(
+            headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+            headline6: TextStyle(fontSize: 20.0, fontStyle: FontStyle.italic),
+            bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+          ),
+        ),
+        home: Wrapper(),
+      ),);
 
   }
 }

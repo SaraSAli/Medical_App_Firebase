@@ -6,8 +6,6 @@ import '../services/auth.dart';
 
 import 'package:flutter/material.dart';
 
-import 'google_sign_in.dart';
-
 class Login extends StatefulWidget {
   final Function? toggleView;
   Login({this.toggleView});
@@ -107,7 +105,7 @@ class _Login extends State<Login> {
       ),
     );
 
-    final loginGoogleButton = Material(
+/*    final loginGoogleButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
       color: Theme.of(context).primaryColor,
@@ -127,9 +125,39 @@ class _Login extends State<Login> {
           textAlign: TextAlign.center,
         ),
       ),
+    );*/
+
+    final loginGoogleButton = Material(
+      elevation: 5.0,
+      borderRadius: BorderRadius.circular(30.0),
+      color: Theme.of(context).primaryColor,
+      child: MaterialButton(
+        minWidth: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        onPressed: () async {
+          dynamic result =  _auth.singInWithGoogle();
+          if (result.uid == null) { //null means unsuccessfull authentication
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: Text(result.code),
+                  );
+                });
+          }
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context)=>Home())
+          );
+        },
+        child: Text(
+          "Sign in with Google",
+          style: TextStyle(color: Theme.of(context).primaryColorLight),
+          textAlign: TextAlign.center,
+        ),
+      ),
     );
 
-    final loginEmailPasswordButon = Material(
+    final loginEmailPasswordButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
       color: Theme.of(context).primaryColor,
@@ -182,7 +210,7 @@ class _Login extends State<Login> {
                   passwordField,
                   txtbutton,
                   const SizedBox(height: 35.0),
-                  loginEmailPasswordButon,
+                  loginEmailPasswordButton,
                   const SizedBox(height: 25.0),
                   loginGoogleButton,
                   const SizedBox(height: 15.0),

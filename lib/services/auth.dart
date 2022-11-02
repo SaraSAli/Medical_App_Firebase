@@ -1,24 +1,25 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../models/FirebaseUser.dart';
 import '../models/loginuser.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final _googleSignIn = GoogleSignIn();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
   final CollectionReference collection =
       FirebaseFirestore.instance.collection('users');
 
-  String imageUrl='';
+  String imageUrl = '';
 
   FirebaseUser? _firebaseUser(User? user) {
     return user != null ? FirebaseUser(uid: user.uid) : null;
@@ -51,6 +52,27 @@ class AuthService {
     }
   }
 
+  Future singInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleSignInAccount =
+          await _googleSignIn.signIn();
+      if (googleSignInAccount != null) {
+        final googleSingInAuthentication =
+            await googleSignInAccount.authentication;
+        final AuthCredential authCredential = GoogleAuthProvider.credential(
+            accessToken: googleSingInAuthentication.accessToken,
+            idToken: googleSingInAuthentication.idToken);
+
+        UserCredential userCredential =
+            await _auth.signInWithCredential(authCredential);
+        User? user = userCredential.user;
+        return _firebaseUser(user);
+      }
+    } catch (e) {
+      return FirebaseUser(code: e.toString(), uid: null);
+    }
+  }
+
   Future registerEmailPassword(LoginUser _login, String fullName,
       String mobileNumber, String email, String age) async {
     try {
@@ -67,7 +89,8 @@ class AuthService {
 
       //Add user details
       //addUserDetails(fullName, mobileNumber, email, age);
-      updateUserData(FirebaseAuth.instance.currentUser?.uid, fullName, mobileNumber, email, age);
+      updateUserData(FirebaseAuth.instance.currentUser?.uid, fullName,
+          mobileNumber, email, age);
 
       //Return user
       User? user = userCredential.user;
@@ -81,10 +104,16 @@ class AuthService {
 
   Future signOut() async {
     try {
+      FirebaseAuth.instance.signOut();
       return await _auth.signOut();
     } catch (e) {
       return null;
     }
+  }
+
+  Future googleSignOut() async {
+    await _auth.signOut();
+    await _googleSignIn.signOut();
   }
 
   Future<void> uploadFile(String filePath, String fileName) async {
