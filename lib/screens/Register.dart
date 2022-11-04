@@ -132,6 +132,9 @@ class _Register extends State<Register> {
                     );
                   });
             }
+            if (result != null) {
+              Navigator.pushNamed(context, 'home_screen');
+            }
           }
         },
         child: Text(

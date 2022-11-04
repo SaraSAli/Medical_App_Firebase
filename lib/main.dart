@@ -1,3 +1,7 @@
+import 'package:firebase/screens/Login.dart';
+import 'package:firebase/screens/Register.dart';
+import 'package:firebase/screens/category.dart';
+import 'package:firebase/screens/home.dart';
 import 'package:firebase/screens/wrapper.dart';
 import 'package:firebase/services/auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -40,6 +44,16 @@ class MyApp extends StatelessWidget {
           ),
         ),
         home: Wrapper(),
+        //initialRoute: 'category',
+        routes: {
+          'category': (context) => Category(),
+          '/Login': (context) => Login(),
+          'registration_screen': (context) => Register(),
+          'login_screen': (context) => Login(),
+          'home_screen': (context) => Home(),
+          '/DoctorLogin' : (context) => Login(),
+          '/PatientLogin' : (context) => Login()
+        },
       ),);
 
   }

@@ -1,10 +1,9 @@
 import 'package:firebase/screens/home.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/loginuser.dart';
 import '../services/auth.dart';
-
-import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
   final Function? toggleView;
@@ -77,7 +76,7 @@ class _Login extends State<Login> {
         },
         child: const Text('New? Register here'));
 
-    final loginAnonymousButon = Material(
+    final loginAnonymousButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
       color: Theme.of(context).primaryColor,
@@ -87,7 +86,8 @@ class _Login extends State<Login> {
         onPressed: () async {
           dynamic result = await _auth.signInAnonymous();
 
-          if (result.uid == null) { //null means unsuccessfull authentication
+          if (result.uid == null) {
+            //null means unsuccessfull authentication
             showDialog(
                 context: context,
                 builder: (context) {
@@ -95,6 +95,9 @@ class _Login extends State<Login> {
                     content: Text(result.code),
                   );
                 });
+          }
+          if (result != null) {
+            Navigator.pushNamed(context, 'home_screen');
           }
         },
         child: Text(
@@ -104,28 +107,6 @@ class _Login extends State<Login> {
         ),
       ),
     );
-
-/*    final loginGoogleButton = Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(30.0),
-      color: Theme.of(context).primaryColor,
-      child: MaterialButton(
-        minWidth: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: (){
-          final provider=Provider.of<Google_sign_in_Provider>(context,listen: false);
-          provider.googleLogin();
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context)=>Home())
-          );
-        },
-        child: Text(
-          "Sign in with Google",
-          style: TextStyle(color: Theme.of(context).primaryColorLight),
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );*/
 
     final loginGoogleButton = Material(
       elevation: 5.0,
@@ -145,9 +126,9 @@ class _Login extends State<Login> {
                   );
                 });
           }
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context)=>Home())
-          );
+          if (result != null) {
+            Navigator.pushNamed(context, 'home_screen');
+          }
         },
         child: Text(
           "Sign in with Google",
@@ -176,6 +157,9 @@ class _Login extends State<Login> {
                     );
                   });
             }
+            if (result != null) {
+              Navigator.pushNamed(context, 'home_screen');
+            }
           }
         },
         child: Text(
@@ -203,7 +187,7 @@ class _Login extends State<Login> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  loginAnonymousButon,
+                  loginAnonymousButton,
                   const SizedBox(height: 45.0),
                   emailField,
                   const SizedBox(height: 25.0),
