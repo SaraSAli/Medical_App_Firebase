@@ -29,7 +29,6 @@ class ProfilePage extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
           await _auth.signOut();
-          Navigator.pushNamed(context, 'category');
         },
         child: Text(
           "Logout",

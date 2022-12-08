@@ -1,4 +1,3 @@
-import 'package:firebase/screens/category.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -15,8 +14,7 @@ class Wrapper extends StatelessWidget{
 
     if(user == null)
     {
-      //return Handler();
-      return Category();
+      return Handler();
     }else
     {
       return Home();

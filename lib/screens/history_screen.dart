@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-
 import '../services/auth.dart';
 
 class HistoryWidget extends StatelessWidget {

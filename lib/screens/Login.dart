@@ -96,9 +96,6 @@ class _Login extends State<Login> {
                   );
                 });
           }
-          if (result != null) {
-            Navigator.pushNamed(context, 'home_screen');
-          }
         },
         child: Text(
           "Log in Anonymously",
@@ -126,9 +123,9 @@ class _Login extends State<Login> {
                   );
                 });
           }
-          if (result != null) {
-            Navigator.pushNamed(context, 'home_screen');
-          }
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context)=>Home())
+          );
         },
         child: Text(
           "Sign in with Google",
