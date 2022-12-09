@@ -42,11 +42,10 @@ dependencies:
   google_nav_bar: any
   font_awesome_flutter: ^10.3.0
   firebase_storage: ^11.0.6
-  file_picker: ^5.2.2
   image_picker: ^0.8.6
   wave: ^0.2.2
-  profile: ^0.0.1
   google_sign_in: ^5.4.2
+  tflite: ^1.1.2
 
 dev_dependencies:
   flutter_test:

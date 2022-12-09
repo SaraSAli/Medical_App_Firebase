@@ -37,8 +37,8 @@ class _Home extends State<Home>{
             ),
             body: TabBarView(
               children: [
-                UploadImage(),
-                HistoryWidget(),
+                UploadImageScreen(),
+                HistoryScreen(),
                 ProfilePage(),
               ],
             ),
