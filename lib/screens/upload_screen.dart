@@ -24,14 +24,26 @@ class _UploadImageScreen extends State<UploadImageScreen> {
   @override
   void initState() {
     super.initState();
-    loadModel();
+    loadModel().then((value) {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    Tflite.close();
   }
 
   Future loadModel() async {
-    Tflite.close();
-    String res;
-    res = (await Tflite.loadModel(
-        model: "assets/model.tflite", labels: "assets/labels.txt"))!;
+    String? res;
+    /*res = (await Tflite.loadModel(
+        model: "assets/converted_model.tflite", labels: "assets/labels_model.txt"))!;*/
+    res = await Tflite.loadModel(
+      model: "assets/converted_model.tflite",
+      labels: "assets/labels_model.txt",
+    );
     print("Models loading status: $res");
 /*    FirebaseModelDownloader.instance
         .getModel(
@@ -59,7 +71,7 @@ class _UploadImageScreen extends State<UploadImageScreen> {
   Future imageClassification(File image) async {
     final List? recognitions = await Tflite.runModelOnImage(
       path: image.path,
-      numResults: 6,
+      numResults: 4,
       threshold: 0.05,
       imageMean: 127.5,
       imageStd: 127.5,
@@ -116,15 +128,14 @@ class _UploadImageScreen extends State<UploadImageScreen> {
                                 Icon(
                                   Icons.image,
                                   size: 30,
-                                  color: Colors.red,
+                                  color: Colors.black,
                                 ),
                                 Text(
                                   "Gallery",
                                   style: TextStyle(
                                       fontSize: 13,
-                                      color: Colors.green,
                                       fontWeight: FontWeight.bold),
-                                )
+                                ),
                               ],
                             ),
                           ),
@@ -153,14 +164,14 @@ class _UploadImageScreen extends State<UploadImageScreen> {
                                 Icon(
                                   Icons.camera_alt,
                                   size: 30,
-                                  color: Colors.red,
+                                  color: Colors.black,
                                 ),
                                 Text(
                                   "Camera",
                                   style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.green,
-                                      fontWeight: FontWeight.bold),
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 )
                               ],
                             ),
@@ -174,6 +185,7 @@ class _UploadImageScreen extends State<UploadImageScreen> {
                 Column(
                   children: (imageSelect)
                       ? _results.map((result) {
+                    print('Results: $result');
                           return Card(
                             child: Container(
                               margin: EdgeInsets.all(10),
@@ -203,79 +215,10 @@ class _UploadImageScreen extends State<UploadImageScreen> {
           .then((value) => print('Done'));
       setState(() {});
       imageClassification(image);
+      return;
     }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('No file selected')),
+    );
   }
-
-/*void getImageLabels(XFile image) async {
-    final inputImage = InputImage.fromFilePath(image.path);
-    ImageLabeler imageLabeler = ImageLabeler(options: ImageLabelerOptions());
-    List<ImageLabel> labels = await imageLabeler.processImage(inputImage);
-    StringBuffer sb = StringBuffer();
-    for (ImageLabel imgLabel in labels) {
-      String lblText = imgLabel.label;
-      double confidence = imgLabel.confidence;
-      sb.write(lblText);
-      sb.write(" : ");
-      sb.write((confidence * 100).toStringAsFixed(2));
-      sb.write("%\n");
-    }
-    imageLabeler.close();
-    imageLabel = sb.toString();
-    imageSelect = false;
-    setState(() {});
-  }*/
 }
-
-/**
- * return Scaffold(
-    body: ListView(
-    children: [
-    (imageSelect)
-    ? Container(
-    margin: const EdgeInsets.all(10),
-    child: Image.file(_image),
-    )
-    : Container(
-    margin: const EdgeInsets.all(10),
-    child: const Opacity(
-    opacity: 0.8,
-    child: Center(
-    child: Text("No image selected"),
-    ),
-    ),
-    ),
-    SingleChildScrollView(
-    child: Column(
-    children: (imageSelect)
-    ? _results.map((result) {
-    return Card(
-    child: Container(
-    margin: EdgeInsets.all(10),
-    child: Text(
-    "${result['label']} - ${result['confidence'].toStringAsFixed(2)}",
-    style: const TextStyle(
-    color: Colors.red, fontSize: 20),
-    ),
-    ),
-    );
-    }).toList()
-    : [],
-    ),
-    ),
-    IconButton(
-    onPressed: () {
-    pickImage(ImageSource.camera);
-    },
-    icon: Icon(Icons.camera_alt)),
-    Center(
-    child: ElevatedButton(
-    child: Text('Upload File'),
-    onPressed: (){
-    pickImage(ImageSource.gallery);
-    },
-    ),
-    ),
-    ],
-    ),
-    );
- */

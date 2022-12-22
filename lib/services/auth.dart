@@ -13,11 +13,12 @@ import '../models/loginuser.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _googleSignIn = GoogleSignIn();
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
   final CollectionReference collection =
       FirebaseFirestore.instance.collection('users');
+  static Reference refStorage = FirebaseStorage.instance.ref();
+
 
   String imageUrl = '';
 
@@ -116,6 +117,10 @@ class AuthService {
     await _googleSignIn.signOut();
   }
 
+  getImage(String imageName){
+    refStorage.child(_auth.currentUser!.uid).child(imageName);
+  }
+
   Future<void> uploadFile(String filePath, String fileName) async {
     File file = File(filePath);
     Reference referenceRoot = FirebaseStorage.instance.ref();
@@ -148,6 +153,23 @@ class AuthService {
       print('Found file: $ref');
     });
     return results;
+  }
+
+  Future<void> listPhotos() async {
+    firebase_storage.ListResult result = await storage.ref(_auth.currentUser!.uid).listAll();
+
+    for (firebase_storage.Reference ref in result.items) {
+      String url = await firebase_storage.FirebaseStorage.instance
+          .ref(ref.fullPath)
+          .getDownloadURL();
+      print(url);
+    }
+  }
+
+
+  Future<String> downloadURL(String imageName) async{
+    String downloadURL = (await storage.ref(_auth.currentUser!.uid+'/$imageName').getDownloadURL()) as String;
+    return downloadURL;
   }
 
   Future updateUserData(String? uid, String fullName, String mobileNumber, String email, String age) async{

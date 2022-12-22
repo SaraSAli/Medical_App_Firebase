@@ -46,6 +46,10 @@ dependencies:
   wave: ^0.2.2
   google_sign_in: ^5.4.2
   tflite: ^1.1.2
+  cached_network_image: ^3.2.3
+  progress_dialog: ^1.2.4
+  shared_preferences: ^2.0.15
+  smooth_page_indicator: ^1.0.0+2
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +74,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+    - assets/images/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
