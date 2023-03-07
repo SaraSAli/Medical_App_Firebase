@@ -38,34 +38,11 @@ class _UploadImageScreen extends State<UploadImageScreen> {
 
   Future loadModel() async {
     String? res;
-    /*res = (await Tflite.loadModel(
-        model: "assets/converted_model.tflite", labels: "assets/labels_model.txt"))!;*/
     res = await Tflite.loadModel(
-      model: "assets/converted_model.tflite",
-      labels: "assets/labels_model.txt",
+      model: "assets/model.tflite",
+      labels: "assets/labels.txt",
     );
     print("Models loading status: $res");
-/*    FirebaseModelDownloader.instance
-        .getModel(
-            "Object-Detector",
-            FirebaseModelDownloadType.localModel,
-            FirebaseModelDownloadConditions(
-              iosAllowsCellularAccess: true,
-              iosAllowsBackgroundDownloading: false,
-              androidChargingRequired: false,
-              androidWifiRequired: false,
-              androidDeviceIdleRequired: false,
-            ))
-        .then((customModel) {
-      // Download complete. Depending on your app, you could enable the ML
-      // feature, or switch from the local model to the remote model, etc.
-
-      // The CustomModel object contains the local path of the model file,
-      // which you can use to instantiate a TensorFlow Lite interpreter.
-      final localModelPath = customModel.file;
-
-      // ...
-    });*/
   }
 
   Future imageClassification(File image) async {
@@ -88,120 +65,120 @@ class _UploadImageScreen extends State<UploadImageScreen> {
     return Scaffold(
       body: Center(
           child: SingleChildScrollView(
-        child: Container(
-            margin: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                //if (imageSelect) const CircularProgressIndicator(),
-                (!imageSelect)
-                    ? Container(
-                        width: 300,
-                        height: 300,
-                        color: Colors.grey[300]!,
-                      )
-                    : Image.file(_image),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+            child: Container(
+                margin: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 5),
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
-                            onPrimary: Colors.grey,
-                            shadowColor: Colors.grey[400],
-                            elevation: 10,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0)),
-                          ),
-                          onPressed: () {
-                            pickImage(ImageSource.gallery);
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 5),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: const [
-                                Icon(
-                                  Icons.image,
-                                  size: 30,
-                                  color: Colors.black,
-                                ),
-                                Text(
-                                  "Gallery",
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )),
-                    Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 5),
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
-                            onPrimary: Colors.grey,
-                            shadowColor: Colors.grey[400],
-                            elevation: 10,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0)),
-                          ),
-                          onPressed: () {
-                            pickImage(ImageSource.camera);
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 5),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: const [
-                                Icon(
-                                  Icons.camera_alt,
-                                  size: 30,
-                                  color: Colors.black,
-                                ),
-                                Text(
-                                  "Camera",
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        )),
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Column(
-                  children: (imageSelect)
-                      ? _results.map((result) {
-                    print('Results: $result');
-                          return Card(
-                            child: Container(
-                              margin: EdgeInsets.all(10),
-                              child: Text(
-                                "${result['label']} - ${result['confidence'].toStringAsFixed(2)}",
-                                style: const TextStyle(
-                                    color: Colors.red, fontSize: 20),
+                    //if (imageSelect) const CircularProgressIndicator(),
+                    (!imageSelect)
+                        ? Container(
+                      width: 300,
+                      height: 300,
+                      color: Colors.grey[300]!,
+                    )
+                        : Image.file(_image),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.symmetric(vertical: 20),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.white,
+                                onPrimary: Colors.grey,
+                                shadowColor: Colors.grey[400],
+                                elevation: 10,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0)),
                               ),
+                              onPressed: () {
+                                pickImage(ImageSource.gallery);
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 5),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: const [
+                                    Icon(
+                                      Icons.image,
+                                      size: 30,
+                                      color: Colors.black,
+                                    ),
+                                    Text(
+                                      "Gallery",
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                        Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.symmetric(vertical: 20),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.white,
+                                onPrimary: Colors.grey,
+                                shadowColor: Colors.grey[400],
+                                elevation: 10,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0)),
+                              ),
+                              onPressed: () {
+                                pickImage(ImageSource.camera);
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 5),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: const [
+                                    Icon(
+                                      Icons.camera_alt,
+                                      size: 30,
+                                      color: Colors.black,
+                                    ),
+                                    Text(
+                                      "Camera",
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Column(
+                      children: (imageSelect)
+                          ? _results.map((result) {
+                        print('Results: $result');
+                        return Card(
+                          child: Container(
+                            margin: EdgeInsets.all(10),
+                            child: Text(
+                              "${result['label']} - ${result['confidence'].toStringAsFixed(2)}",
+                              style: const TextStyle(
+                                  color: Colors.red, fontSize: 20),
                             ),
-                          );
-                        }).toList()
-                      : [],
-                ),
-              ],
-            )),
-      )),
+                          ),
+                        );
+                      }).toList()
+                          : [],
+                    ),
+                  ],
+                )),
+          )),
     );
   }
 

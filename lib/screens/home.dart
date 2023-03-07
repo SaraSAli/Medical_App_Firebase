@@ -49,6 +49,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin{
         body: TabBarView(
           controller: _tabController,
           children: <Widget>[
+            //KidneyDiseaseDetection(),
             UploadImageScreen(),
             HistoryScreen(),
             ProfilePage(),

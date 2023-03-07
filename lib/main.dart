@@ -1,3 +1,4 @@
+import 'package:firebase/screens/home_page.dart';
 import 'package:firebase/screens/wrapper.dart';
 import 'package:firebase/services/auth.dart';
 import 'package:flutter/cupertino.dart';

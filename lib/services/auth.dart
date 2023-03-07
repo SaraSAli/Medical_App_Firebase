@@ -9,6 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import '../models/FirebaseUser.dart';
 import '../models/loginuser.dart';
+import '../models/model.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -83,15 +84,14 @@ class AuthService {
               email: _login.email.toString(),
               password: _login.password.toString());
 
-      final User? userr = _auth.currentUser;
-      final _uid = userr?.uid;
-      userr?.updatePhotoURL(imageUrl);
-      userr?.reload();
+      /*final User? userr = _auth.currentUser;
+      final _uid = userr?.uid;*/
+      /*user?.updatePhotoURL(imageUrl);
+      user?.reload();*/
 
       //Add user details
       //addUserDetails(fullName, mobileNumber, email, age);
-      updateUserData(FirebaseAuth.instance.currentUser?.uid, fullName,
-          mobileNumber, email, age);
+      updateUserData(fullName, mobileNumber, email, age, 'Patient');
 
       //Return user
       User? user = userCredential.user;
@@ -129,6 +129,21 @@ class AuthService {
     try {
       //await storage.ref('test/$fileName').putFile(file);
       await referenceImageToUpload.putFile(file);
+      imageUrl = await referenceImageToUpload.getDownloadURL();
+      final Reference storage =
+          FirebaseStorage.instance.ref().child("${_auth.currentUser!.uid}.jpg");
+      final UploadTask task = storage.putFile(file);
+      task.then((value) async {
+        String url = (await storage.getDownloadURL()).toString();
+        FirebaseFirestore.instance.collection("history").add({
+          'id': _auth.currentUser!.uid,
+          'email': _auth.currentUser!.email,
+          'image': url,
+          'diagnosis': 'Tumor',
+          'time': DateTime.now(),
+        });
+      });
+      print('task $task');
     } on firebase_core.FirebaseException catch (e) {
       print(e);
     }
@@ -166,28 +181,29 @@ class AuthService {
     }
   }
 
-
-  Future<String> downloadURL(String imageName) async{
-    String downloadURL = (await storage.ref(_auth.currentUser!.uid+'/$imageName').getDownloadURL()) as String;
+  Future<String> downloadURL(String imageName) async {
+    String downloadURL = (await storage
+        .ref(_auth.currentUser!.uid + '/$imageName')
+        .getDownloadURL()) as String;
     return downloadURL;
   }
 
-  Future updateUserData(String? uid, String fullName, String mobileNumber, String email, String age) async{
-    collection.where(uid!, isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-        .limit(1)
-        .get()
-        .then((QuerySnapshot querySnapshot){
-          if(querySnapshot.docs.isEmpty){
-            collection.add({
-              'uid': uid,
-              'fullName': fullName,
-              'mobileNumber': mobileNumber,
-              'email': email,
-              'age': age,
-            }
-            );
-          }
-    })
-    .catchError((error){});
+  Future updateUserData(String fullName, String mobileNumber,
+      String email, String age, String role) async {
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = _auth.currentUser;
+    UserModel userModel = UserModel();
+    userModel.email = email;
+    userModel.uid = user!.uid;
+    userModel.role = role;
+    userModel.name = fullName;
+    userModel.number = mobileNumber;
+    userModel.age = age;
+    userModel.isAssigned = 'NA';
+
+    await firebaseFirestore
+        .collection("users")
+        .doc(user.uid)
+        .set(userModel.toMap());
   }
 }
